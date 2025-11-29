@@ -1,0 +1,59 @@
+services:
+  mongodb:
+    image: mongo:7
+    container_name: inventory-mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin123
+      MONGO_INITDB_DATABASE: inventory
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - inventory-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: inventory-backend
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      MONGODB_URI: mongodb://admin:admin123@mongodb:27017/inventory?authSource=admin
+      PORT: 3000
+    depends_on:
+      - mongodb
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    networks:
+      - inventory-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: inventory-frontend
+    restart: always
+    ports:
+      - "4200:4200"
+    environment:
+      API_URL: http://localhost:3000
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    networks:
+      - inventory-network
+    depends_on:
+      - backend
+
+volumes:
+  mongodb_data:
+
+networks:
+  inventory-network:
+    driver: bridge
