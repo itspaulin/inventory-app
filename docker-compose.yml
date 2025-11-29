@@ -1,8 +1,9 @@
 services:
+  # MongoDB Database
   mongodb:
     image: mongo:7
     container_name: inventory-mongodb
-    restart: always
+    restart: unless-stopped
     ports:
       - "27017:27017"
     environment:
@@ -13,46 +14,59 @@ services:
       - mongodb_data:/data/db
     networks:
       - inventory-network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
+  # Backend NestJS
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
     container_name: inventory-backend
-    restart: always
+    restart: unless-stopped
     ports:
       - "3000:3000"
     environment:
       MONGODB_URI: mongodb://admin:admin123@mongodb:27017/inventory?authSource=admin
       PORT: 3000
+      NODE_ENV: development
     depends_on:
-      - mongodb
+      mongodb:
+        condition: service_healthy
     volumes:
-      - ./backend:/app
-      - /app/node_modules
+      - ./backend/src:/app/src
+      - ./backend/package.json:/app/package.json
     networks:
       - inventory-network
 
+  # Frontend Angular
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
     container_name: inventory-frontend
-    restart: always
+    restart: unless-stopped
     ports:
       - "4200:4200"
     environment:
-      API_URL: http://localhost:3000
+      - NODE_ENV=development
     volumes:
       - ./frontend:/app
       - /app/node_modules
+      - /app/.angular
     networks:
       - inventory-network
     depends_on:
       - backend
+    stdin_open: true
+    tty: true
 
 volumes:
   mongodb_data:
+    driver: local
 
 networks:
   inventory-network:
