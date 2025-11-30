@@ -7,8 +7,7 @@ export const routes: Routes = [
   },
   {
     path: 'products',
-    loadComponent: () =>
-      import('./features/products/feature/products-list/products-list').then((m) => m.ProductsList),
+    loadChildren: () => import('./features/products/product.routes').then((m) => m.PRODUCT_ROUTES),
   },
   {
     path: 'stock',
