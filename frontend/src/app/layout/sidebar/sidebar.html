@@ -1,1 +1,37 @@
-<p>sidebar works!</p>
+<aside class="w-64 bg-gray-800 text-white">
+  <nav class="p-4">
+    <ul class="space-y-2">
+      <li>
+        <a
+          routerLink="/"
+          routerLinkActive="bg-blue-600"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="flex items-center gap-3 px-4 py-3 rounded hover:bg-gray-700 transition"
+        >
+          <span>🏠</span>
+          <span>Home</span>
+        </a>
+      </li>
+      <li>
+        <a
+          routerLink="/produtos"
+          routerLinkActive="bg-blue-600"
+          class="flex items-center gap-3 px-4 py-3 rounded hover:bg-gray-700 transition"
+        >
+          <span>📦</span>
+          <span>Produtos</span>
+        </a>
+      </li>
+      <li>
+        <a
+          routerLink="/estoque"
+          routerLinkActive="bg-blue-600"
+          class="flex items-center gap-3 px-4 py-3 rounded hover:bg-gray-700 transition"
+        >
+          <span>📊</span>
+          <span>Estoque</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</aside>
