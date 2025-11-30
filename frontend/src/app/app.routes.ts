@@ -8,13 +8,13 @@ export const routes: Routes = [
   {
     path: 'products',
     loadComponent: () =>
-      import('./features/produtos/feature/produtos-list/produtos-list').then((m) => m.ProdutosList),
+      import('./features/products/feature/products-list/products-list').then((m) => m.ProductsList),
   },
   {
     path: 'stock',
     loadComponent: () =>
-      import('./features/estoque/feature/estoque-dashboard/estoque-dashboard').then(
-        (m) => m.EstoqueDashboard
+      import('./features/stock/feature/stock-dashboard/stock-dashboard').then(
+        (m) => m.StockDashboard
       ),
   },
 ];
