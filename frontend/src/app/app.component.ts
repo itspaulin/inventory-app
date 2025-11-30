@@ -7,7 +7,6 @@ import { Sidebar } from './layout/sidebar/sidebar';
   selector: 'app-root',
   imports: [RouterOutlet, RouterModule, Header, Sidebar],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css',
 })
 export class App {
   protected readonly title = signal('sistema-estoque');
